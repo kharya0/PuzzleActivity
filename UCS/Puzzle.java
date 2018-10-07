@@ -121,7 +121,7 @@ class State implements Comparable<State>{
 
     @Override
     public String toString() {
-        return String.format("[%3d, %3d, %3d]\n[%3d, %3d, %3d]\n[%3d, %3d, %3d]\n", node[0], node[1], node[2], node[3], node[4], node[5], node[6], node[7], node[8]);
+        return String.format("[%d, %3d, %3d]\n[%d, %3d, %3d]\n[%d, %3d, %3d]\n", node[0], node[1], node[2], node[3], node[4], node[5], node[6], node[7], node[8]);
     }
 
     public int compareTo(State other) {
