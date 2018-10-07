@@ -8,7 +8,7 @@ class State implements Comparable<State>{
     private int[] node;
     private State parent;
     private int cost, depth;
-    public static int[] goal = new int[]{1,2,3,4,5,0,6,7,8};
+    public static int[] goal = new int[]{0,1,2,3,4,5,6,7,8};
 
     public State(int[] node, State parent, int cost, int depth) {
         this.node = node;
