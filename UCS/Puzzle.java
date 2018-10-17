@@ -8,7 +8,6 @@ class State implements Comparable<State>{
     private int[] node;
     private State parent;
     private int cost, depth;
-    public static int[] goal = new int[]{0,1,2,3,4,5,6,7,8};
 
     public State(int[] node, State parent, int cost, int depth) {
         this.node = node;
@@ -25,7 +24,7 @@ class State implements Comparable<State>{
         return cost;
     }
 
-    public ArrayList<State> expand() {
+    public ArrayList<State> expand(int[] goal) {
         ArrayList<State> successor = new ArrayList<>();
         int[] child = node.clone();
 
@@ -115,7 +114,7 @@ class State implements Comparable<State>{
         return node;
     }
 
-    public boolean isGoal() {
+    public boolean isGoal(int[] goal) {
         return Arrays.equals(goal, node);
     }
 
@@ -131,8 +130,11 @@ class State implements Comparable<State>{
 } //end of class State
 
 public class Puzzle {
+
+    final static int[] GOAL = new int[]{1,2,3,8,0,4,7,6,5};
+
     public static void main(String[] args) {
-        int[] sample = new int[]{1,2,3,4,0,5,6,7,8};
+        int[] sample = new int[]{1,3,4,8,6,2,7,0,5};
 
         State initialState = new State(sample, null, 0, 0);
 
@@ -147,11 +149,11 @@ public class Puzzle {
 
             totalNodesVisited++;
 
-            if (currentState.isGoal()) {
+            if (currentState.isGoal(GOAL)) {
                 showSolution(currentState, totalNodesVisited, maxFrontierSize);
                 return;
             } else {
-                ArrayList<State> successorStates = currentState.expand();
+                ArrayList<State> successorStates = currentState.expand(GOAL);
                 frontier.addAll(successorStates);
 
                 maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
