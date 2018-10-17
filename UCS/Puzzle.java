@@ -131,10 +131,10 @@ class State implements Comparable<State>{
 
 public class Puzzle {
 
-    final static int[] GOAL = new int[]{1,2,3,8,0,4,7,6,5};
+    final static int[] GOAL = new int[]{1,2,3,4,5,6,7,8,0};
 
     public static void main(String[] args) {
-        int[] sample = new int[]{1,3,4,8,6,2,7,0,5};
+        int[] sample = new int[]{8,1,3,4,0,2,7,6,5};
 
         State initialState = new State(sample, null, 0, 0);
 

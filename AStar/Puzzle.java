@@ -198,12 +198,13 @@ public class Puzzle {
               ArrayList<State> successorStates = currentState.expand(GOAL);
 
               for(State s : successorStates){
-                    s.setH(h.compute(s, GOAL));
-
-
+                //if (seen.indexOf(s) == -1) {
+                    s.setH(h.compute(s, GOAL) + s.getCost());
+                //}
               }
 
               frontier.addAll(successorStates);
+
 
               maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
           }
