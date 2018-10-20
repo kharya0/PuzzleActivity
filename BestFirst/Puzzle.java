@@ -10,7 +10,6 @@ class State implements Comparable<State>{
     private State parent;
     private int cost, depth, heuristic;
 
-    //add heuristic variable
     public State(int[] node, State parent, int cost, int depth, int heuristic) {
         this.node = node;
         this.parent = parent;
@@ -194,7 +193,7 @@ public class Puzzle {
         int[] init = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
-        search(initialState, new MisplacedTiles());
+        //search(initialState, new MisplacedTiles());
         search(initialState, new ManhattanDistance());
     }
 
