@@ -147,16 +147,19 @@ interface H {
     public int compute(State s, int[] g);
 }
 
-class MisplacedTiles implements H{
+class ManhattanDistance implements H{
 
   @Override
   public int compute(State s, int[] goal){
     int h = 0;
     int[] node = s.getNode();
+    int row = 0, col = 0;
 
     for (int i = 0; i < node.length; i++) {
-        if (node[i] != goal[i]) {
-            h++;
+        if (node[i] != goal[i] || node[i] != 0) {
+            row = Math.abs((node[i] - goal[i]) / 3);
+            col = Math.abs(node[i] % 3);
+            h += row + col;
         }
     }
     return h;
@@ -232,12 +235,16 @@ public class Puzzle {
 
     public static int computeH(int[] node, int[] goal) {
         int h = 0;
+        int row = 0, col = 0;
 
         for (int i = 0; i < node.length; i++) {
-            if (node[i] != goal[i]) {
-                h++;
+            if (node[i] != goal[i] || node[i] != 0) {
+                row = Math.abs((node[i] - goal[i]) / 3);
+                col = Math.abs(node[i] - goal[i] % 3);
+                h += row + col;
             }
         }
+        System.out.println("Manhattan Distance: " + h);
         return h;
     }
 }
