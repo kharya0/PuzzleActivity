@@ -158,7 +158,7 @@ class ManhattanDistance implements H{
     for (int i = 0; i < node.length; i++) {
         if (node[i] != goal[i] || node[i] != 0) {
             row = Math.abs((node[i] - goal[i]) / 3);
-            col = Math.abs(node[i] % 3);
+            col = Math.abs((node[i] - goal[i]) % 3);
             h += row + col;
         }
     }
@@ -176,6 +176,7 @@ public class Puzzle {
         int[] init = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
+        System.out.println(computeH(init, GOAL));
         search(initialState, new ManhattanDistance());
     }
 
@@ -240,7 +241,7 @@ public class Puzzle {
         for (int i = 0; i < node.length; i++) {
             if (node[i] != goal[i] || node[i] != 0) {
                 row = Math.abs((node[i] - goal[i]) / 3);
-                col = Math.abs(node[i] - goal[i] % 3);
+                col = Math.abs((node[i] - goal[i]) % 3);
                 h += row + col;
             }
         }
