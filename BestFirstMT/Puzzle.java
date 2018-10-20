@@ -149,34 +149,14 @@ interface H {
 
 class MisplacedTiles implements H{
 
-    @Override
-    public int compute(State s, int[] goal){
-        int h = 0;
-        int[] node = s.getNode();
-
-        for (int i = 0; i < node.length; i++) {
-            if (node[i] != goal[i]) {
-                h++;
-            }
-        }
-        return h;
-    }
-
-}
-
-class ManhattanDistance implements H{
-
   @Override
   public int compute(State s, int[] goal){
     int h = 0;
     int[] node = s.getNode();
-    int row = 0, col = 0;
 
     for (int i = 0; i < node.length; i++) {
-        if (node[i] != goal[i] || node[i] != 0) {
-            row = Math.abs((node[i] - goal[i]) / 3);
-            col = Math.abs(node[i] % 3);
-            h += row + col;
+        if (node[i] != goal[i]) {
+            h++;
         }
     }
     return h;
@@ -193,40 +173,39 @@ public class Puzzle {
         int[] init = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
-        //search(initialState, new MisplacedTiles());
-        search(initialState, new ManhattanDistance());
+        search(initialState, new MisplacedTiles());
     }
 
-    public static void search (State init, H h){
+    public static void search(State init, H h){
 
-        PriorityQueue<State> frontier = new PriorityQueue<>();
-        frontier.add(init);
+      PriorityQueue<State> frontier = new PriorityQueue<>();
+      frontier.add(init);
 
-        int totalNodesVisited = 0;
-        int maxFrontierSize = 1;
+      int totalNodesVisited = 0;
+      int maxFrontierSize = 1;
 
-        while (frontier.size() > 0) {
-            State currentState = frontier.remove();
+      while (frontier.size() > 0) {
+          State currentState = frontier.remove();
 
-            totalNodesVisited++;
+          totalNodesVisited++;
 
-            if (currentState.isGoal(GOAL)) {
-                showSolution(currentState, totalNodesVisited, maxFrontierSize);
-                return;
-            } else {
-                ArrayList<State> successorStates = currentState.expand(GOAL);
+          if (currentState.isGoal(GOAL)) {
+              showSolution(currentState, totalNodesVisited, maxFrontierSize);
+              return;
+          } else {
+              ArrayList<State> successorStates = currentState.expand(GOAL);
 
-                for (State s : successorStates) {
+              for(State s : successorStates){
                     s.setH(h.compute(s, GOAL));
                     if (!seen.contains(s.toString())) {
                         frontier.add(s);
                         seen.add(s.toString());
                     }
-                }
-            }
+              }
 
-            maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
-        }
+              maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
+          }
+      }
     }
 
     public static void showSolution(State state, int totalNodesVisited, int maxFrontierSize) {
