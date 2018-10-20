@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Comparator;
+import java.util.HashSet;
 
 class State implements Comparable<State>{
 
@@ -9,7 +10,6 @@ class State implements Comparable<State>{
     private State parent;
     private int cost, depth, heuristic;
 
-    //add heuristic variable
     public State(int[] node, State parent, int cost, int depth, int heuristic) {
         this.node = node;
         this.parent = parent;
@@ -149,14 +149,34 @@ interface H {
 
 class MisplacedTiles implements H{
 
+    @Override
+    public int compute(State s, int[] goal){
+        int h = 0;
+        int[] node = s.getNode();
+
+        for (int i = 0; i < node.length; i++) {
+            if (node[i] != goal[i]) {
+                h++;
+            }
+        }
+        return h;
+    }
+
+}
+
+class ManhattanDistance implements H{
+
   @Override
   public int compute(State s, int[] goal){
     int h = 0;
     int[] node = s.getNode();
+    int row = 0, col = 0;
 
     for (int i = 0; i < node.length; i++) {
-        if (node[i] != goal[i]) {
-            h++;
+        if (node[i] != goal[i] || node[i] != 0) {
+            row = Math.abs((node[i] - goal[i]) / 3);
+            col = Math.abs(node[i] % 3);
+            h += row + col;
         }
     }
     return h;
@@ -167,48 +187,46 @@ class MisplacedTiles implements H{
 public class Puzzle {
 
     final static int[] GOAL = new int[]{0,1,2,3,4,5,6,7,8};
+    final static HashSet <String> seen = new HashSet <String>();
 
     public static void main(String[] args) {
-        int[] init = new int[]{2, 6, 0, 7, 8, 5, 1, 4, 3};
+        int[] init = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
-        search(initialState, new MisplacedTiles());
+        //search(initialState, new MisplacedTiles());
+        search(initialState, new ManhattanDistance());
     }
 
-    public static void search(State init, H h){
-    //ArrayList<State> seen = new ArrayList<>();
+    public static void search (State init, H h){
 
-      PriorityQueue<State> frontier = new PriorityQueue<>();
-      frontier.add(init);
+        PriorityQueue<State> frontier = new PriorityQueue<>();
+        frontier.add(init);
 
-      int totalNodesVisited = 0;
-      int maxFrontierSize = 1;
+        int totalNodesVisited = 0;
+        int maxFrontierSize = 1;
 
-      while (frontier.size() > 0) {
-          State currentState = frontier.remove();
+        while (frontier.size() > 0) {
+            State currentState = frontier.remove();
 
-          totalNodesVisited++;
+            totalNodesVisited++;
 
-          //seen.add(currentState);
+            if (currentState.isGoal(GOAL)) {
+                showSolution(currentState, totalNodesVisited, maxFrontierSize);
+                return;
+            } else {
+                ArrayList<State> successorStates = currentState.expand(GOAL);
 
-          if (currentState.isGoal(GOAL)) {
-              showSolution(currentState, totalNodesVisited, maxFrontierSize);
-              return;
-          } else {
-              ArrayList<State> successorStates = currentState.expand(GOAL);
+                for (State s : successorStates) {
+                    s.setH(h.compute(s, GOAL));
+                    if (!seen.contains(s.toString())) {
+                        frontier.add(s);
+                        seen.add(s.toString());
+                    }
+                }
+            }
 
-              for(State s : successorStates){
-                //if (seen.indexOf(s) == -1) {
-                    s.setH(h.compute(s, GOAL) + s.getCost());
-                //}
-              }
-
-              frontier.addAll(successorStates);
-
-
-              maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
-          }
-      }
+            maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
+        }
     }
 
     public static void showSolution(State state, int totalNodesVisited, int maxFrontierSize) {

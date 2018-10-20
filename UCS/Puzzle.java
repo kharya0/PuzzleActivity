@@ -156,6 +156,16 @@ public class Puzzle {
                 return;
             } else {
                 ArrayList<State> successorStates = currentState.expand(GOAL);
+<<<<<<< HEAD
+=======
+
+                for (State s : successorStates) {
+                    if (!seen.contains(s.toString())) {
+                        frontier.add(s);
+                        seen.add(s.toString());
+                    }
+                }
+>>>>>>> b2f370f54d863b93917e2a3fbdddc95c562896b7
 
                 for (State s : successorStates) {
                     if (!seen.contains(s.toString())) {
