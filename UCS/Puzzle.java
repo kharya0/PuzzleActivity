@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Comparator;
+import java.util.HashSet;
 
 class State implements Comparable<State>{
 
@@ -131,10 +132,11 @@ class State implements Comparable<State>{
 
 public class Puzzle {
 
-    final static int[] GOAL = new int[]{1,2,3,4,5,6,7,8,0};
+    final static int[] GOAL = new int[]{0,1,2,3,4,5,6,7,8};
+    final static HashSet <String> seen = new HashSet <String>();
 
     public static void main(String[] args) {
-        int[] sample = new int[]{8,3,1,4,0,2,7,6,5};
+        int[] sample = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(sample, null, 0, 0);
 
@@ -154,7 +156,13 @@ public class Puzzle {
                 return;
             } else {
                 ArrayList<State> successorStates = currentState.expand(GOAL);
-                frontier.addAll(successorStates);
+
+                for (State s : successorStates) {
+                    if (!seen.contains(s.toString())) {
+                        frontier.add(s);
+                        seen.add(s.toString());
+                    }
+                }
 
                 maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
             }
