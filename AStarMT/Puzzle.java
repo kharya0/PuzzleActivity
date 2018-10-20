@@ -138,7 +138,7 @@ class State implements Comparable<State>{
     }
 
     public int compareTo(State other) {
-        return (this.getHeuristic() + this.getCost()) - (other.getHeuristic() + this.getCost());
+        return (this.getHeuristic() + this.getCost()) - (other.getHeuristic() + other.getCost());
     }
 
 } //end of class State
@@ -164,26 +164,6 @@ class MisplacedTiles implements H{
 
 }
 
-class ManhattanDistance implements H{
-
-  @Override
-  public int compute(State s, int[] goal){
-    int h = 0;
-    int[] node = s.getNode();
-    int row = 0, col = 0;
-
-    for (int i = 0; i < node.length; i++) {
-        if (node[i] != goal[i] || node[i] != 0) {
-            row = Math.abs((node[i] - goal[i]) / 3);
-            col = Math.abs(node[i] % 3);
-            h += row + col;
-        }
-    }
-    return h;
-  }
-
-}
-
 public class Puzzle {
 
     final static int[] GOAL = new int[]{0,1,2,3,4,5,6,7,8};
@@ -193,8 +173,7 @@ public class Puzzle {
         int[] init = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
-        //search(initialState, new MisplacedTiles());
-        search(initialState, new ManhattanDistance());
+        search(initialState, new MisplacedTiles());
     }
 
     public static void search(State init, H h){
@@ -209,8 +188,6 @@ public class Puzzle {
           State currentState = frontier.remove();
 
           totalNodesVisited++;
-
-          //seen.add(currentState);
 
           if (currentState.isGoal(GOAL)) {
               showSolution(currentState, totalNodesVisited, maxFrontierSize);

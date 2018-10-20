@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Comparator;
+import java.util.HashSet;
 
 class State implements Comparable<State>{
 
@@ -9,7 +10,6 @@ class State implements Comparable<State>{
     private State parent;
     private int cost, depth, heuristic;
 
-    //add heuristic variable
     public State(int[] node, State parent, int cost, int depth, int heuristic) {
         this.node = node;
         this.parent = parent;
@@ -138,7 +138,7 @@ class State implements Comparable<State>{
     }
 
     public int compareTo(State other) {
-        return this.getHeuristic() - other.getHeuristic();
+        return (this.getHeuristic() + this.getCost()) - (other.getHeuristic() + other.getCost());
     }
 
 } //end of class State
@@ -170,16 +170,16 @@ class ManhattanDistance implements H{
 public class Puzzle {
 
     final static int[] GOAL = new int[]{0,1,2,3,4,5,6,7,8};
+    final static HashSet <String> seen = new HashSet <String>();
 
     public static void main(String[] args) {
         int[] init = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
-        search(initialState, new MisplacedTiles());
+        search(initialState, new ManhattanDistance());
     }
 
     public static void search(State init, H h){
-    //ArrayList<State> seen = new ArrayList<>();
 
       PriorityQueue<State> frontier = new PriorityQueue<>();
       frontier.add(init);
@@ -192,7 +192,6 @@ public class Puzzle {
 
           totalNodesVisited++;
 
-          //seen.add(currentState);
 
           if (currentState.isGoal(GOAL)) {
               showSolution(currentState, totalNodesVisited, maxFrontierSize);
@@ -201,12 +200,13 @@ public class Puzzle {
               ArrayList<State> successorStates = currentState.expand(GOAL);
 
               for(State s : successorStates){
-                //if (seen.indexOf(s) == -1) {
-                    s.setH(h.compute(s, GOAL) + s.getCost());
-                //}
+              	s.setH(h.compute(s, GOAL) + s.getCost());
+              	if (!seen.contains(s.toString())) {
+                      frontier.add(s);
+                      seen.add(s.toString());
+                  }
               }
 
-              frontier.addAll(successorStates);
 
 
               maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
@@ -244,7 +244,6 @@ public class Puzzle {
                 h += row + col;
             }
         }
-        System.out.println("Manhattan Distance: " + h);
         return h;
     }
 }

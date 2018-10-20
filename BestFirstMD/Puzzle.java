@@ -10,6 +10,7 @@ class State implements Comparable<State>{
     private State parent;
     private int cost, depth, heuristic;
 
+    //add heuristic variable
     public State(int[] node, State parent, int cost, int depth, int heuristic) {
         this.node = node;
         this.parent = parent;
@@ -147,7 +148,7 @@ interface H {
     public int compute(State s, int[] g);
 }
 
-class MisplacedTiles implements H{
+class ManhattanDistance implements H{
 
   @Override
   public int compute(State s, int[] goal){
@@ -176,7 +177,7 @@ public class Puzzle {
         int[] init = new int[]{1,2,3,4,0,5,6,7,8};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
-        search(initialState, new MisplacedTiles());
+        search(initialState, new ManhattanDistance());
     }
 
     public static void search(State init, H h){
@@ -192,6 +193,7 @@ public class Puzzle {
 
           totalNodesVisited++;
 
+
           if (currentState.isGoal(GOAL)) {
               showSolution(currentState, totalNodesVisited, maxFrontierSize);
               return;
@@ -199,8 +201,8 @@ public class Puzzle {
               ArrayList<State> successorStates = currentState.expand(GOAL);
 
               for(State s : successorStates){
-                  s.setH(h.compute(s, GOAL));
-                  if (seen.contains(s.toString())) {
+              	s.setH(h.compute(s, GOAL));
+              	if (!seen.contains(s.toString())) {
                       frontier.add(s);
                       seen.add(s.toString());
                   }
@@ -241,7 +243,6 @@ public class Puzzle {
               h += row + col;
           }
       }
-      System.out.println("Manhattan Distance: " + h);
       return h;
     }
 }
