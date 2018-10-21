@@ -165,11 +165,11 @@ class MisplacedTiles implements H {
 
 public class Puzzle {
 
-    final static int[] GOAL = new int[] {1,2,3,4,5,6,7,8,0};
+    final static int[] GOAL = new int[] {1, 7, 8, 5, 0, 3, 4, 6, 2};
     final static HashSet <String> seen = new HashSet <String>();
 
     public static void main(String[] args) {
-        int[] init = new int[] {7, 3, 4, 0, 1, 5, 2, 8, 6};
+        int[] init = new int[]{1, 0, 7, 3, 4, 8, 5, 6, 2};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
         search(initialState, new MisplacedTiles());
