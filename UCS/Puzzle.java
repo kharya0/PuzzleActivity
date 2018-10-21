@@ -163,16 +163,10 @@ public class Puzzle {
                         seen.add(s.toString());
                     }
                 }
-
-                for (State s : successorStates) {
-                    if (!seen.contains(s.toString())) {
-                        frontier.add(s);
-                        seen.add(s.toString());
-                    }
-                }
                 maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
             }
         }
+        System.out.println("No Solution.");
     }
 
     public static void showSolution(State state, int totalNodesVisited, int maxFrontierSize) {

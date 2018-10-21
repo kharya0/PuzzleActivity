@@ -23,8 +23,8 @@ class State implements Comparable<State>{
     }
 
     public State getParent() {
-		    return parent;
-	  }
+        return parent;
+    }
 
     public int getCost() {
         return cost;
@@ -75,14 +75,14 @@ class State implements Comparable<State>{
         }
 
         if (node[4] == 0) {
-             successor.add(new State(swap(4, 1, child), this, cost + 1, depth + 1, 0));
-             child = node.clone();
-             successor.add(new State(swap(4, 3, child), this, cost + 1, depth + 1, 0));
-             child = node.clone();
-             successor.add(new State(swap(4, 5, child), this, cost + 1, depth + 1, 0));
-             child = node.clone();
-             successor.add(new State(swap(4, 7, child), this, cost + 1, depth + 1, 0));
-             child = node.clone();
+            successor.add(new State(swap(4, 1, child), this, cost + 1, depth + 1, 0));
+            child = node.clone();
+            successor.add(new State(swap(4, 3, child), this, cost + 1, depth + 1, 0));
+            child = node.clone();
+            successor.add(new State(swap(4, 5, child), this, cost + 1, depth + 1, 0));
+            child = node.clone();
+            successor.add(new State(swap(4, 7, child), this, cost + 1, depth + 1, 0));
+            child = node.clone();
         }
 
         if (node[5] == 0) {
@@ -118,7 +118,7 @@ class State implements Comparable<State>{
         }
 
         return successor;
-    }
+}
 
     // swaps the elements of the specified index
     public int[] swap(int x, int y, int[] node) {
@@ -147,30 +147,29 @@ interface H {
     public int compute(State s, int[] g);
 }
 
-class MisplacedTiles implements H{
+class MisplacedTiles implements H {
 
-  @Override
-  public int compute(State s, int[] goal){
-    int h = 0;
-    int[] node = s.getNode();
+    @Override
+    public int compute(State s, int[] goal){
+        int h = 0;
+        int[] node = s.getNode();
 
-    for (int i = 0; i < node.length; i++) {
-        if (node[i] != goal[i]) {
-            h++;
+        for (int i = 0; i < node.length; i++) {
+            if (node[i] != goal[i]) {
+                h++;
+            }
         }
+        return h;
     }
-    return h;
-  }
-
 }
 
 public class Puzzle {
 
-    final static int[] GOAL = new int[]{0,1,2,3,4,5,6,7,8};
+    final static int[] GOAL = new int[] {0,1,2,3,4,5,6,7,8};
     final static HashSet <String> seen = new HashSet <String>();
 
     public static void main(String[] args) {
-        int[] init = new int[]{1,2,3,4,0,5,6,7,8};
+        int[] init = new int[] {2,7,0,3,5,8,1,6,4};
 
         State initialState = new State(init, null, 0, 0, computeH(init, GOAL));
         search(initialState, new MisplacedTiles());
@@ -178,34 +177,35 @@ public class Puzzle {
 
     public static void search(State init, H h){
 
-      PriorityQueue<State> frontier = new PriorityQueue<>();
-      frontier.add(init);
+        PriorityQueue<State> frontier = new PriorityQueue<>();
+        frontier.add(init);
 
-      int totalNodesVisited = 0;
-      int maxFrontierSize = 1;
+        int totalNodesVisited = 0;
+        int maxFrontierSize = 1;
 
-      while (frontier.size() > 0) {
-          State currentState = frontier.remove();
+        while (frontier.size() > 0) {
+            State currentState = frontier.remove();
 
-          totalNodesVisited++;
+            totalNodesVisited++;
 
-          if (currentState.isGoal(GOAL)) {
-              showSolution(currentState, totalNodesVisited, maxFrontierSize);
-              return;
-          } else {
-              ArrayList<State> successorStates = currentState.expand(GOAL);
+            if (currentState.isGoal(GOAL)) {
+                showSolution(currentState, totalNodesVisited, maxFrontierSize);
+                return;
+            } else {
+                ArrayList<State> successorStates = currentState.expand(GOAL);
 
-              for(State s : successorStates){
+                for (State s : successorStates) {
                     s.setH(h.compute(s, GOAL));
                     if (!seen.contains(s.toString())) {
                         frontier.add(s);
                         seen.add(s.toString());
                     }
-              }
+                }
 
-              maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
-          }
-      }
+                maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
+            }
+        }
+        System.out.println("No Solution.");
     }
 
     public static void showSolution(State state, int totalNodesVisited, int maxFrontierSize) {

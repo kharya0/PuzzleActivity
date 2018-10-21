@@ -178,35 +178,36 @@ public class Puzzle {
 
     public static void search(State init, H h){
 
-      PriorityQueue<State> frontier = new PriorityQueue<>();
-      frontier.add(init);
+        PriorityQueue<State> frontier = new PriorityQueue<>();
+        frontier.add(init);
 
-      int totalNodesVisited = 0;
-      int maxFrontierSize = 1;
+        int totalNodesVisited = 0;
+        int maxFrontierSize = 1;
 
-      while (frontier.size() > 0) {
-          State currentState = frontier.remove();
+        while (frontier.size() > 0) {
+            State currentState = frontier.remove();
 
-          totalNodesVisited++;
+            totalNodesVisited++;
 
-          if (currentState.isGoal(GOAL)) {
-              showSolution(currentState, totalNodesVisited, maxFrontierSize);
-              return;
-          } else {
-              ArrayList<State> successorStates = currentState.expand(GOAL);
+            if (currentState.isGoal(GOAL)) {
+                showSolution(currentState, totalNodesVisited, maxFrontierSize);
+                return;
+            } else {
+                ArrayList<State> successorStates = currentState.expand(GOAL);
 
-              for(State s : successorStates){
-                    s.setH(h.compute(s, GOAL) + s.getCost());
-                    if (!seen.contains(s.toString())) {
-                        frontier.add(s);
-                        seen.add(s.toString());
-                    }
+              for (State s : successorStates) {
+                  s.setH(h.compute(s, GOAL) + s.getCost());
+
+                  if (!seen.contains(s.toString())) {
+                      frontier.add(s);
+                      seen.add(s.toString());
+                  }
               }
-
               maxFrontierSize = Math.max(maxFrontierSize, frontier.size());
           }
       }
-    }
+      System.out.println("No Solution.");
+  }
 
     public static void showSolution(State state, int totalNodesVisited, int maxFrontierSize) {
         ArrayList<State> path = new ArrayList<>();
