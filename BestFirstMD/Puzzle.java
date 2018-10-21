@@ -157,7 +157,7 @@ class ManhattanDistance implements H{
         int row = 0, col = 0;
 
         for (int i = 0; i < node.length; i++) {
-            if (node[i] != goal[i] || node[i] != 0) {
+            if (node[i] != goal[i]) {
                 row = Math.abs((node[i] - goal[i]) / 3);
                 col = Math.abs((node[i] - goal[i]) % 3);
                 h += row + col;
@@ -236,7 +236,7 @@ public class Puzzle {
         int row = 0, col = 0;
 
         for (int i = 0; i < node.length; i++) {
-            if (node[i] != goal[i] || node[i] != 0) {
+            if (node[i] != goal[i]) {
                 row = Math.abs((node[i] - goal[i]) / 3);
                 col = Math.abs((node[i] - goal[i]) % 3);
                 h += row + col;
