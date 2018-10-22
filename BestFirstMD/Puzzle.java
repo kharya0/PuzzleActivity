@@ -10,7 +10,6 @@ class State implements Comparable<State>{
     private State parent;
     private int cost, depth, heuristic;
 
-    //add heuristic variable
     public State(int[] node, State parent, int cost, int depth, int heuristic) {
         this.node = node;
         this.parent = parent;
